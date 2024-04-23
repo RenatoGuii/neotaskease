@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "neo_task_ease",
+    "slug": "neo_task_ease",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
