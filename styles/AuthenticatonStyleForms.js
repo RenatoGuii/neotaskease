@@ -1,0 +1,137 @@
+import { StyleSheet } from "react-native";
+import { BorderlessButton } from "react-native-gesture-handler";
+
+const estiloCadastro = StyleSheet.create({
+  container: {
+    backgroundColor: "#22264B",
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 20,
+  },
+  tituloLogo: {
+    paddingBottom: 10,
+  },
+  tituloLogo1: {
+    fontFamily: "Kameron_400Regular",
+    color: "#FFF500",
+    fontSize: 45,
+  },
+  tituloLogo2: {
+    fontFamily: "Kameron_400Regular",
+    color: "white",
+    fontSize: 45,
+  },
+  p1: {
+    color: "white",
+    fontSize: 24,
+    fontWeight: "300",
+    marginBottom: 50,
+  },
+  input: {
+    fontSize: 19,
+    width: "100%",
+    height: 55,
+    borderColor: "white",
+    borderWidth: 1,
+    backgroundColor: "white",
+    paddingHorizontal: 10,
+    marginBottom: 20,
+    borderRadius: 15,
+    justifyContent: "space-between",
+  },
+  AreaInputSenha: {
+    width: "100%",
+    height: 55,
+    display: "flex",
+    flexDirection: "row",
+    borderColor: "white",
+    backgroundColor: "white",
+    borderRadius: 15,
+    marginBottom: 20,
+  },
+  inputSenha: {
+    fontSize: 19,
+    width: "87%",
+    height: 55,
+    paddingHorizontal: 10,
+    borderRadius: 15,
+    justifyContent: "space-between",
+  },
+  passwordInput: { width: "13%", marginTop: 15 },
+  botaoCadastro: {
+    backgroundColor: "#4461F2",
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+  },
+  botaoText: {
+    color: "white",
+    fontSize: 20,
+    letterSpacing: 2,
+  },
+  linha: {
+    marginTop: 12,
+    width: "100%",
+    height: 1,
+    backgroundColor: "white",
+  },
+  p2: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "300",
+    marginTop: 10,
+  },
+  botaoEsqueceuSenha: {
+    width: "100%",
+    alignItems: "flex-end",
+    paddingRight: 5,
+  },
+  esqueceuSenha: {
+    color: "white",
+    fontSize: 17,
+    fontWeight: "300",
+    paddingTop: 10,
+  },
+  botaoRetornar: {
+    marginTop: 20,
+    backgroundColor: "red",
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+  },
+  botaoExcluir: {
+    marginTop: 20,
+    backgroundColor: "#730A11",
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+  },
+  dropdown: {
+    backgroundColor: "white",
+    color: "white",
+  },
+  nomeTarefa: {
+    marginTop: 20,
+    fontSize: 30,
+    color: "white",
+    fontWeight: "bold",
+    borderBottomWidth: 3,
+    borderBottomColor: "white",
+    paddingBottom: 5,
+  },
+  grupoBotoes: {
+    flexDirection: "row",
+  },
+});
+
+export default estiloCadastro;
