@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
+  StyleSheet,
+} from "react-native";
 import estiloForm from "../styles/AuthenticatonStyleForms";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../src/services/firebaseConnection";
@@ -10,6 +18,7 @@ export default function CadastroScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [hidePassword, setHidePassword] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function handleCadastro() {
     if (!username.trim()) {
@@ -22,6 +31,7 @@ export default function CadastroScreen({ navigation }) {
       return;
     }
 
+    setIsLoading(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -51,6 +61,8 @@ export default function CadastroScreen({ navigation }) {
       } else {
         console.error(error);
       }
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -116,6 +128,26 @@ export default function CadastroScreen({ navigation }) {
       <TouchableOpacity onPress={handleLoginNavigate}>
         <Text style={estiloForm.p2}>Já tem uma conta? Entre aqui</Text>
       </TouchableOpacity>
+
+      {isLoading && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#ffffff" />
+        </View>
+      )}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    zIndex: 10,
+  },
+});

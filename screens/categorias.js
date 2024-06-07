@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
 import {
   collection,
   query,
@@ -7,6 +14,7 @@ import {
   doc,
   deleteDoc,
   where,
+  writeBatch,
 } from "firebase/firestore";
 import { db, auth } from "../src/services/firebaseConnection";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -15,12 +23,14 @@ import estiloCadastro from "../styles/AuthenticatonStyleForms";
 
 export default function ListaCategoriasScreen({ navigation }) {
   const [categorias, setCategorias] = useState([]);
+  const [isLoading, setIsLoading] = useState(false); // Estado para indicador de carregamento
 
   useEffect(() => {
     carregarCategorias();
   }, []);
 
   const carregarCategorias = async () => {
+    setIsLoading(true); // Ativar o indicador de carregamento
     try {
       const user = auth.currentUser;
       if (!user) {
@@ -41,13 +51,15 @@ export default function ListaCategoriasScreen({ navigation }) {
       setCategorias(categoriasList);
     } catch (error) {
       console.error("Erro ao carregar categorias:", error);
+    } finally {
+      setIsLoading(false); // Desativar o indicador de carregamento
     }
   };
 
   const handleExcluirCategoria = async (categoriaId, categoriaNome) => {
     Alert.alert(
       "Excluir Categoria",
-      `Tem certeza de que deseja excluir a categoria "${categoriaNome}"?`,
+      `Tem certeza de que deseja excluir a categoria "${categoriaNome}" e todas as tarefas associadas?`,
       [
         {
           text: "Cancelar",
@@ -56,19 +68,39 @@ export default function ListaCategoriasScreen({ navigation }) {
         {
           text: "Confirmar",
           onPress: async () => {
+            setIsLoading(true); // Ativar o indicador de carregamento
             try {
-              await deleteDoc(doc(db, "categorias", categoriaId));
+              // Obtém todas as tarefas da categoria
+              const tarefasQuery = query(
+                collection(db, "tarefas"),
+                where("categoria", "==", categoriaId)
+              );
+              const tarefasSnapshot = await getDocs(tarefasQuery);
+
+              const batch = writeBatch(db);
+
+              // Deleta todas as tarefas
+              tarefasSnapshot.docs.forEach((doc) => {
+                batch.delete(doc.ref);
+              });
+
+              // Deleta a categoria
+              batch.delete(doc(db, "categorias", categoriaId));
+
+              await batch.commit();
               await carregarCategorias();
               Alert.alert(
                 "Sucesso ✅",
-                `Categoria "${categoriaNome}" excluída com sucesso.`
+                `Categoria "${categoriaNome}" e todas as tarefas associadas foram excluídas com sucesso.`
               );
             } catch (error) {
-              console.error("Erro ao excluir categoria:", error);
+              console.error("Erro ao excluir categoria e tarefas:", error);
               Alert.alert(
                 "Erro",
-                "Houve um erro ao excluir a categoria. Por favor, tente novamente mais tarde."
+                "Houve um erro ao excluir a categoria e suas tarefas. Por favor, tente novamente mais tarde."
               );
+            } finally {
+              setIsLoading(false); // Desativar o indicador de carregamento
             }
           },
         },
@@ -118,7 +150,9 @@ export default function ListaCategoriasScreen({ navigation }) {
       </View>
 
       <View style={estiloListaCategorias.listaContainer}>
-        {categorias.length > 0 ? (
+        {isLoading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : categorias.length > 0 ? (
           <FlatList
             data={categorias}
             renderItem={renderizarItemCategoria}

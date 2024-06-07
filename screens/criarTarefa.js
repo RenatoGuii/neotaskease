@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
 import { collection, addDoc, query, getDocs, where } from "firebase/firestore";
 import { db, auth } from "../src/services/firebaseConnection";
 import { Picker } from "@react-native-picker/picker";
-
 import estiloForm from "../styles/AuthenticatonStyleForms";
 import estiloHome from "../styles/HomeStyle";
 
@@ -12,6 +18,7 @@ export default function CriarTarefaScreen({ navigation }) {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState("");
   const [categorias, setCategorias] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false); // Estado para indicador de carregamento
 
   // Função para carregar as categorias existentes do Firestore
   const carregarCategorias = async () => {
@@ -48,6 +55,7 @@ export default function CriarTarefaScreen({ navigation }) {
       return;
     }
 
+    setIsLoading(true); // Ativar o indicador de carregamento
     try {
       const user = auth.currentUser;
       if (!user) {
@@ -76,6 +84,8 @@ export default function CriarTarefaScreen({ navigation }) {
         "❌ Erro",
         "Houve um erro ao criar a tarefa. Por favor, tente novamente mais tarde."
       );
+    } finally {
+      setIsLoading(false); // Desativar o indicador de carregamento
     }
   };
 
@@ -115,18 +125,24 @@ export default function CriarTarefaScreen({ navigation }) {
         ))}
       </Picker>
 
-      <TouchableOpacity
-        style={[estiloForm.botaoCadastro, { marginTop: 20 }]}
-        onPress={handleCriarTarefa}
-      >
-        <Text style={estiloForm.botaoText}>Criar Tarefa</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={estiloForm.botaoRetornar}
-        onPress={() => navigation.navigate("Home")}
-      >
-        <Text style={estiloForm.botaoText}>Retornar</Text>
-      </TouchableOpacity>
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <>
+          <TouchableOpacity
+            style={[estiloForm.botaoCadastro, { marginTop: 20 }]}
+            onPress={handleCriarTarefa}
+          >
+            <Text style={estiloForm.botaoText}>Criar Tarefa</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={estiloForm.botaoRetornar}
+            onPress={() => navigation.navigate("Home")}
+          >
+            <Text style={estiloForm.botaoText}>Retornar</Text>
+          </TouchableOpacity>
+        </>
+      )}
     </View>
   );
 }

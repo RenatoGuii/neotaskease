@@ -1,11 +1,19 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
 import { collection, addDoc } from "firebase/firestore";
 import { db, auth } from "../src/services/firebaseConnection";
 import estiloForm from "../styles/AuthenticatonStyleForms";
 
 export default function CriarCategoriaScreen({ navigation }) {
   const [nomeCategoria, setNomeCategoria] = useState("");
+  const [isLoading, setIsLoading] = useState(false); // Estado para indicador de carregamento
 
   const handleCriarCategoria = async () => {
     if (nomeCategoria === "") {
@@ -13,6 +21,7 @@ export default function CriarCategoriaScreen({ navigation }) {
       return;
     }
 
+    setIsLoading(true); // Ativar o indicador de carregamento
     try {
       const user = auth.currentUser;
       if (!user) {
@@ -38,6 +47,8 @@ export default function CriarCategoriaScreen({ navigation }) {
         "❌ Erro",
         "Houve um erro ao criar a categoria. Tente novamente mais tarde."
       );
+    } finally {
+      setIsLoading(false); // Desativar o indicador de carregamento
     }
   };
 
@@ -59,18 +70,24 @@ export default function CriarCategoriaScreen({ navigation }) {
         value={nomeCategoria}
         onChangeText={setNomeCategoria}
       />
-      <TouchableOpacity
-        style={[estiloForm.botaoCadastro, { marginTop: 20 }]}
-        onPress={handleCriarCategoria}
-      >
-        <Text style={estiloForm.botaoText}>Criar Categoria</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={estiloForm.botaoRetornar}
-        onPress={() => navigation.navigate("Home")}
-      >
-        <Text style={estiloForm.botaoText}>Retornar</Text>
-      </TouchableOpacity>
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <>
+          <TouchableOpacity
+            style={[estiloForm.botaoCadastro, { marginTop: 20 }]}
+            onPress={handleCriarCategoria}
+          >
+            <Text style={estiloForm.botaoText}>Criar Categoria</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={estiloForm.botaoRetornar}
+            onPress={() => navigation.navigate("Home")}
+          >
+            <Text style={estiloForm.botaoText}>Retornar</Text>
+          </TouchableOpacity>
+        </>
+      )}
     </View>
   );
 }

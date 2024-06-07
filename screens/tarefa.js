@@ -1,5 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
 import { collection, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "../src/services/firebaseConnection";
 import { Picker } from "@react-native-picker/picker";
@@ -14,6 +21,7 @@ export default function TarefaScreen({ navigation }) {
   const [nomeTarefa, setNomeTarefa] = useState(tarefa.nome);
   const [statusAtual, setStatusAtual] = useState(tarefa.status);
   const [statusSelecionado, setStatusSelecionado] = useState(tarefa.status);
+  const [isLoading, setIsLoading] = useState(false); // Estado para indicador de carregamento
 
   // Função para atualizar o status da tarefa
   const handleAtualizarStatus = async () => {
@@ -22,14 +30,19 @@ export default function TarefaScreen({ navigation }) {
       return;
     }
 
+    setIsLoading(true); // Ativar o indicador de carregamento
     try {
-      await updateDoc(doc(db, "tarefas", tarefa.id), { status: statusSelecionado });
+      await updateDoc(doc(db, "tarefas", tarefa.id), {
+        status: statusSelecionado,
+      });
       setStatusAtual(statusSelecionado);
       Alert.alert("✅ Sucesso", "Status atualizado com sucesso!");
-      navigation.navigate("Home")
+      navigation.navigate("Home");
     } catch (error) {
       console.error("Erro ao atualizar status:", error);
       Alert.alert("❌ Erro", "Houve um erro ao atualizar o status da tarefa.");
+    } finally {
+      setIsLoading(false); // Desativar o indicador de carregamento
     }
   };
 
@@ -41,11 +54,12 @@ export default function TarefaScreen({ navigation }) {
       [
         {
           text: "Cancelar",
-          style: "cancel"
+          style: "cancel",
         },
         {
           text: "Confirmar",
           onPress: async () => {
+            setIsLoading(true); // Ativar o indicador de carregamento
             try {
               await deleteDoc(doc(db, "tarefas", tarefa.id));
               Alert.alert("✅ Sucesso", "Tarefa excluída com sucesso!");
@@ -53,9 +67,11 @@ export default function TarefaScreen({ navigation }) {
             } catch (error) {
               console.error("Erro ao excluir tarefa:", error);
               Alert.alert("❌ Erro", "Houve um erro ao excluir a tarefa.");
+            } finally {
+              setIsLoading(false); // Desativar o indicador de carregamento
             }
-          }
-        }
+          },
+        },
       ]
     );
   };
@@ -67,14 +83,16 @@ export default function TarefaScreen({ navigation }) {
         <Text style={estiloForm.tituloLogo2}>TaskEase</Text>
       </Text>
 
-      <Text style={[estiloForm.nomeTarefa, { marginBottom: 30 }]}>{nomeTarefa}</Text>
+      <Text style={[estiloForm.nomeTarefa, { marginBottom: 30 }]}>
+        {nomeTarefa}
+      </Text>
 
       <Text style={[estiloForm.p1, { marginBottom: 20 }]}>Status:</Text>
 
       <Picker
         selectedValue={statusSelecionado}
         style={[estiloHome.picker, { width: "100%", marginBottom: 20 }]}
-        onValueChange={(itemValue, itemIndex) => setStatusSelecionado(itemValue)}
+        onValueChange={(itemValue) => setStatusSelecionado(itemValue)}
         prompt="Selecione o status"
       >
         <Picker.Item label="Criado" value="CRIADO" />
@@ -82,29 +100,44 @@ export default function TarefaScreen({ navigation }) {
         <Picker.Item label="Finalizado" value="CONCLUIDO" />
       </Picker>
 
-      <TouchableOpacity
-        style={[estiloForm.botaoCadastro, { marginTop: 20, opacity: statusSelecionado !== statusAtual ? 1 : 0.5 }]}
-        onPress={handleAtualizarStatus}
-        disabled={statusSelecionado === statusAtual}
-      >
-        <Text style={estiloForm.botaoText}>Atualizar Status</Text>
-      </TouchableOpacity>
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <>
+          <TouchableOpacity
+            style={[
+              estiloForm.botaoCadastro,
+              {
+                marginTop: 20,
+                opacity: statusSelecionado !== statusAtual ? 1 : 0.5,
+              },
+            ]}
+            onPress={handleAtualizarStatus}
+            disabled={statusSelecionado === statusAtual}
+          >
+            <Text style={estiloForm.botaoText}>Atualizar Status</Text>
+          </TouchableOpacity>
 
-      <View style={estiloForm.grupoBotoes}>
-        <TouchableOpacity
-          style={[estiloForm.botaoRetornar, { width: "60%", marginRight: 20 }]}
-          onPress={() => navigation.navigate("Home")}
-        >
-          <Text style={estiloForm.botaoText}>Retornar</Text>
-        </TouchableOpacity>
+          <View style={estiloForm.grupoBotoes}>
+            <TouchableOpacity
+              style={[
+                estiloForm.botaoRetornar,
+                { width: "60%", marginRight: 20 },
+              ]}
+              onPress={() => navigation.navigate("Home")}
+            >
+              <Text style={estiloForm.botaoText}>Retornar</Text>
+            </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[estiloForm.botaoExcluir, { width: "35%" }]}
-          onPress={handleExcluirTarefa}
-        >
-          <Text style={estiloForm.botaoText}>Excluir</Text>
-        </TouchableOpacity>
-      </View>
+            <TouchableOpacity
+              style={[estiloForm.botaoExcluir, { width: "35%" }]}
+              onPress={handleExcluirTarefa}
+            >
+              <Text style={estiloForm.botaoText}>Excluir</Text>
+            </TouchableOpacity>
+          </View>
+        </>
+      )}
     </View>
   );
 }
