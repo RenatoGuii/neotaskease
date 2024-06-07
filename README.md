@@ -4,9 +4,9 @@ O NeoTaskEase é um aplicativo de gerenciamento de tarefas desenvolvido com Reac
 Pré-requisitos
 Antes de começar, certifique-se de ter instalado o seguinte:
 
-Node.js (v14 ou superior)
-Expo CLI (para executar o aplicativo no Expo Go)
-Conta no Firebase (para configurar o banco de dados e autenticação)
+- Node.js (v14 ou superior)
+- Expo CLI (para executar o aplicativo no Expo Go)
+- Conta no Firebase (para configurar o banco de dados e autenticação)
 
 Configuração do Projeto
 Clone o repositório:
