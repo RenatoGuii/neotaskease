@@ -40,7 +40,6 @@ export default function CadastroScreen({ navigation }) {
       );
       const user = userCredential.user;
 
-      // Atualizar o perfil do usuário com o username
       await updateUsername(user, username);
 
       console.log("Cadastro feito: ", user.uid);

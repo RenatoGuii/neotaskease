@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   Alert,
   ActivityIndicator,
@@ -21,16 +20,15 @@ export default function TarefaScreen({ navigation }) {
   const [nomeTarefa, setNomeTarefa] = useState(tarefa.nome);
   const [statusAtual, setStatusAtual] = useState(tarefa.status);
   const [statusSelecionado, setStatusSelecionado] = useState(tarefa.status);
-  const [isLoading, setIsLoading] = useState(false); // Estado para indicador de carregamento
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Função para atualizar o status da tarefa
   const handleAtualizarStatus = async () => {
     if (statusSelecionado === statusAtual) {
       Alert.alert("Status não foi alterado.");
       return;
     }
 
-    setIsLoading(true); // Ativar o indicador de carregamento
+    setIsLoading(true);
     try {
       await updateDoc(doc(db, "tarefas", tarefa.id), {
         status: statusSelecionado,
@@ -42,11 +40,10 @@ export default function TarefaScreen({ navigation }) {
       console.error("Erro ao atualizar status:", error);
       Alert.alert("❌ Erro", "Houve um erro ao atualizar o status da tarefa.");
     } finally {
-      setIsLoading(false); // Desativar o indicador de carregamento
+      setIsLoading(false);
     }
   };
 
-  // Função para excluir a tarefa
   const handleExcluirTarefa = async () => {
     Alert.alert(
       "Confirmação",
@@ -59,7 +56,7 @@ export default function TarefaScreen({ navigation }) {
         {
           text: "Confirmar",
           onPress: async () => {
-            setIsLoading(true); // Ativar o indicador de carregamento
+            setIsLoading(true);
             try {
               await deleteDoc(doc(db, "tarefas", tarefa.id));
               Alert.alert("✅ Sucesso", "Tarefa excluída com sucesso!");
@@ -68,7 +65,7 @@ export default function TarefaScreen({ navigation }) {
               console.error("Erro ao excluir tarefa:", error);
               Alert.alert("❌ Erro", "Houve um erro ao excluir a tarefa.");
             } finally {
-              setIsLoading(false); // Desativar o indicador de carregamento
+              setIsLoading(false);
             }
           },
         },
@@ -97,7 +94,7 @@ export default function TarefaScreen({ navigation }) {
       >
         <Picker.Item label="Criado" value="CRIADO" />
         <Picker.Item label="Iniciado" value="INICIADO" />
-        <Picker.Item label="Finalizado" value="CONCLUIDO" />
+        <Picker.Item label="Concluido" value="CONCLUIDO" />
       </Picker>
 
       {isLoading ? (

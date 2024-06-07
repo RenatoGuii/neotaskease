@@ -18,9 +18,8 @@ export default function CriarTarefaScreen({ navigation }) {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState("");
   const [categorias, setCategorias] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isLoading, setIsLoading] = useState(false); // Estado para indicador de carregamento
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Função para carregar as categorias existentes do Firestore
   const carregarCategorias = async () => {
     try {
       const user = auth.currentUser;
@@ -48,14 +47,13 @@ export default function CriarTarefaScreen({ navigation }) {
     carregarCategorias();
   }, []);
 
-  // Função para lidar com a criação de uma nova tarefa
   const handleCriarTarefa = async () => {
     if (nomeTarefa === "" || categoriaSelecionada === "") {
       Alert.alert("Por favor, preencha todos os campos.");
       return;
     }
 
-    setIsLoading(true); // Ativar o indicador de carregamento
+    setIsLoading(true);
     try {
       const user = auth.currentUser;
       if (!user) {
@@ -67,7 +65,7 @@ export default function CriarTarefaScreen({ navigation }) {
         nome: nomeTarefa,
         categoria: categoriaSelecionada,
         status: "CRIADO",
-        userId: user.uid, // Incluindo o ID do usuário na tarefa
+        userId: user.uid,
       });
 
       console.log("Tarefa criada com ID:", docRef.id);
@@ -85,7 +83,7 @@ export default function CriarTarefaScreen({ navigation }) {
         "Houve um erro ao criar a tarefa. Por favor, tente novamente mais tarde."
       );
     } finally {
-      setIsLoading(false); // Desativar o indicador de carregamento
+      setIsLoading(false);
     }
   };
 

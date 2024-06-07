@@ -19,18 +19,18 @@ import {
 import { db, auth } from "../src/services/firebaseConnection";
 import { FontAwesome5 } from "@expo/vector-icons";
 import estiloListaCategorias from "../styles/estiloListaCategorias";
-import estiloCadastro from "../styles/AuthenticatonStyleForms";
+import estiloForms from "../styles/AuthenticatonStyleForms";
 
 export default function ListaCategoriasScreen({ navigation }) {
   const [categorias, setCategorias] = useState([]);
-  const [isLoading, setIsLoading] = useState(false); // Estado para indicador de carregamento
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     carregarCategorias();
   }, []);
 
   const carregarCategorias = async () => {
-    setIsLoading(true); // Ativar o indicador de carregamento
+    setIsLoading(true);
     try {
       const user = auth.currentUser;
       if (!user) {
@@ -40,7 +40,7 @@ export default function ListaCategoriasScreen({ navigation }) {
 
       const categoriasQuery = query(
         collection(db, "categorias"),
-        where("userId", "==", user.uid) // Filtra categorias pelo ID do usuário
+        where("userId", "==", user.uid)
       );
 
       const categoriasSnapshot = await getDocs(categoriasQuery);
@@ -52,7 +52,7 @@ export default function ListaCategoriasScreen({ navigation }) {
     } catch (error) {
       console.error("Erro ao carregar categorias:", error);
     } finally {
-      setIsLoading(false); // Desativar o indicador de carregamento
+      setIsLoading(false);
     }
   };
 
@@ -68,9 +68,8 @@ export default function ListaCategoriasScreen({ navigation }) {
         {
           text: "Confirmar",
           onPress: async () => {
-            setIsLoading(true); // Ativar o indicador de carregamento
+            setIsLoading(true);
             try {
-              // Obtém todas as tarefas da categoria
               const tarefasQuery = query(
                 collection(db, "tarefas"),
                 where("categoria", "==", categoriaId)
@@ -79,12 +78,10 @@ export default function ListaCategoriasScreen({ navigation }) {
 
               const batch = writeBatch(db);
 
-              // Deleta todas as tarefas
               tarefasSnapshot.docs.forEach((doc) => {
                 batch.delete(doc.ref);
               });
 
-              // Deleta a categoria
               batch.delete(doc(db, "categorias", categoriaId));
 
               await batch.commit();
@@ -100,7 +97,7 @@ export default function ListaCategoriasScreen({ navigation }) {
                 "Houve um erro ao excluir a categoria e suas tarefas. Por favor, tente novamente mais tarde."
               );
             } finally {
-              setIsLoading(false); // Desativar o indicador de carregamento
+              setIsLoading(false);
             }
           },
         },
@@ -134,8 +131,8 @@ export default function ListaCategoriasScreen({ navigation }) {
           justifyContent: "center",
         }}
       >
-        <Text style={[estiloCadastro.tituloLogo1, { fontSize: 40 }]}>Neo</Text>
-        <Text style={[estiloCadastro.tituloLogo2, { fontSize: 40 }]}>
+        <Text style={[estiloForms.tituloLogo1, { fontSize: 40 }]}>Neo</Text>
+        <Text style={[estiloForms.tituloLogo2, { fontSize: 40 }]}>
           TaskEase
         </Text>
       </View>

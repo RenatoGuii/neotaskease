@@ -13,7 +13,7 @@ import estiloForm from "../styles/AuthenticatonStyleForms";
 
 export default function CriarCategoriaScreen({ navigation }) {
   const [nomeCategoria, setNomeCategoria] = useState("");
-  const [isLoading, setIsLoading] = useState(false); // Estado para indicador de carregamento
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleCriarCategoria = async () => {
     if (nomeCategoria === "") {
@@ -21,7 +21,7 @@ export default function CriarCategoriaScreen({ navigation }) {
       return;
     }
 
-    setIsLoading(true); // Ativar o indicador de carregamento
+    setIsLoading(true);
     try {
       const user = auth.currentUser;
       if (!user) {
@@ -31,7 +31,7 @@ export default function CriarCategoriaScreen({ navigation }) {
 
       const docRef = await addDoc(collection(db, "categorias"), {
         nome: nomeCategoria,
-        userId: user.uid, // Adiciona o ID do usuário à categoria
+        userId: user.uid,
       });
 
       console.log("Categoria criada com ID:", docRef.id);
@@ -48,7 +48,7 @@ export default function CriarCategoriaScreen({ navigation }) {
         "Houve um erro ao criar a categoria. Tente novamente mais tarde."
       );
     } finally {
-      setIsLoading(false); // Desativar o indicador de carregamento
+      setIsLoading(false);
     }
   };
 

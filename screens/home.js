@@ -26,7 +26,7 @@ export default function HomeScreen({ navigation }) {
   const [tarefas, setTarefas] = useState([]);
   const [loading, setLoading] = useState(true);
   const user = auth.currentUser;
-  const [isLoading, setIsLoading] = useState(false); // Novo estado para carregamento
+  const [isLoading, setIsLoading] = useState(false);
 
   const getFirstName = (displayName) => {
     if (!displayName) return "";
@@ -71,7 +71,7 @@ export default function HomeScreen({ navigation }) {
       if (categoriaSelecionada)
         filtros.push(where("categoria", "==", categoriaSelecionada));
       if (status) filtros.push(where("status", "==", status));
-      filtros.push(where("userId", "==", user.uid)); // Adiciona filtro pelo ID do usuário
+      filtros.push(where("userId", "==", user.uid));
 
       const tarefasQuery =
         filtros.length > 0 ? query(tarefasRef, ...filtros) : tarefasRef;
@@ -133,7 +133,7 @@ export default function HomeScreen({ navigation }) {
           ],
           { cancelable: false }
         );
-        return true; // Impede o comportamento padrão de voltar
+        return true;
       };
 
       BackHandler.addEventListener("hardwareBackPress", onBackPress);
@@ -150,9 +150,8 @@ export default function HomeScreen({ navigation }) {
   };
 
   const renderizarCardTarefa = ({ item }) => {
-    let statusColor = "black"; // Cor padrão
+    let statusColor = "black";
 
-    // Verifica o status da tarefa e define a cor correspondente
     switch (item.status) {
       case "CRIADO":
         statusColor = "green";

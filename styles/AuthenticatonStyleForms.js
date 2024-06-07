@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import { BorderlessButton } from "react-native-gesture-handler";
 
-const estiloCadastro = StyleSheet.create({
+const estiloForms = StyleSheet.create({
   container: {
     backgroundColor: "#22264B",
     flex: 1,
@@ -134,4 +134,4 @@ const estiloCadastro = StyleSheet.create({
   },
 });
 
-export default estiloCadastro;
+export default estiloForms;
