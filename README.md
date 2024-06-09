@@ -1,4 +1,4 @@
-NeoTaskEase
+
 O NeoTaskEase é um aplicativo de gerenciamento de tarefas desenvolvido com React Native e Firebase.
 
 Pré-requisitos
