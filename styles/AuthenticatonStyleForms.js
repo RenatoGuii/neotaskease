@@ -128,6 +128,7 @@ const estiloForms = StyleSheet.create({
     borderBottomWidth: 3,
     borderBottomColor: "white",
     paddingBottom: 5,
+    textAlign: "center",
   },
   grupoBotoes: {
     flexDirection: "row",

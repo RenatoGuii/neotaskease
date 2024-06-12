@@ -180,7 +180,9 @@ export default function HomeScreen({ navigation }) {
         style={estiloHome.cardTarefa}
         onPress={() => navegarDetalhesTarefa(item)}
       >
-        <Text style={estiloHome.cardNome}>{item.nome}</Text>
+        <Text style={estiloHome.cardNome} numberOfLines={2}>
+          {item.nome}
+        </Text>
         <Text style={estiloHome.cardCategoria}>{nomeCategoria}</Text>
         <Text style={[estiloHome.cardStatus, { backgroundColor: statusColor }]}>
           {item.status}
